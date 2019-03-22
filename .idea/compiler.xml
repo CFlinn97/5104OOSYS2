@@ -9,8 +9,8 @@
         <module name="5104OOSYS2" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="5104OOSYS2" target="1.5" />
+    <bytecodeTargetLevel target="11">
+      <module name="5104OOSYS2" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
