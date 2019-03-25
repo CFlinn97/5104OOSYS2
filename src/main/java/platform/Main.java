@@ -1,4 +1,4 @@
-package PLATFORM;
+package platform;
 
 import java.sql.SQLException;
 

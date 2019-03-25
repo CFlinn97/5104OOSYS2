@@ -951,9 +951,9 @@
     </column>
     <column id="242" parent="229" name="status">
       <Position>6</Position>
-      <DataType>enum(&apos;PENDING&apos;, &apos;ACTIVE&apos;, &apos;SOLD&apos;, &apos;FAILED&apos;, &apos;CLOSED&apos;)|0e</DataType>
+      <DataType>enum(&apos;ACTIVE&apos;, &apos;SOLD&apos;, &apos;FAILED&apos;, &apos;CLOSED&apos;)|0e</DataType>
       <NotNull>1</NotNull>
-      <DefaultExpression>&apos;PENDING&apos;</DefaultExpression>
+      <DefaultExpression>&apos;ACTIVE&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
     <index id="243" parent="229" name="FK_auction_user">
@@ -1079,110 +1079,124 @@ bidID</ColNames>
     </column>
     <column id="264" parent="233" name="itemCond">
       <Position>3</Position>
-      <DataType>enum(&apos;Brand New&apos;, &apos;Good&apos;, &apos;Cosmetic Damage&apos;, &apos;Heavy Damage&apos;)|0e</DataType>
+      <DataType>enum(&apos;NEW&apos;, &apos;GOOD&apos;, &apos;COSMETIC&apos;, &apos;HEAVY&apos;)|0e</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;HEAVY&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="265" parent="233" name="PRIMARY">
+    <column id="265" parent="233" name="itemName">
+      <Position>4</Position>
+      <DataType>varchar(50)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="266" parent="233" name="userID">
+      <Position>5</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <key id="267" parent="233" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>itemID</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="266" parent="234" name="userID">
+    <column id="268" parent="234" name="userID">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="267" parent="234" name="userName">
+    <column id="269" parent="234" name="userName">
       <Position>2</Position>
       <DataType>varchar(50)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="268" parent="234" name="password">
+    <column id="270" parent="234" name="password">
       <Position>3</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="269" parent="234" name="userName">
+    <index id="271" parent="234" name="userName">
       <ColNames>userName</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <key id="270" parent="234" name="PRIMARY">
+    <key id="272" parent="234" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>userID</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="271" parent="234" name="userName">
+    <key id="273" parent="234" name="userName">
       <ColNames>userName</ColNames>
       <UnderlyingIndexName>userName</UnderlyingIndexName>
     </key>
-    <column id="272" parent="235" name="userID">
+    <column id="274" parent="235" name="userID">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="273" parent="235" name="bidID">
+    <column id="275" parent="235" name="bidID">
       <Position>2</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="274" parent="235" name="FK_UB_bid">
+    <index id="276" parent="235" name="FK_UB_bid">
       <ColNames>bidID</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="275" parent="235" name="PRIMARY">
+    <key id="277" parent="235" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>userID
 bidID</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="276" parent="235" name="FK_UB_user">
+    <foreign-key id="278" parent="235" name="FK_UB_user">
       <ColNames>userID</ColNames>
       <RefSchemaName>testDB</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>userID</RefColNames>
     </foreign-key>
-    <foreign-key id="277" parent="235" name="FK_UB_bid">
+    <foreign-key id="279" parent="235" name="FK_UB_bid">
       <ColNames>bidID</ColNames>
       <RefSchemaName>testDB</RefSchemaName>
       <RefTableName>bid</RefTableName>
       <RefColNames>bidID</RefColNames>
     </foreign-key>
-    <column id="278" parent="236" name="userID">
+    <column id="280" parent="236" name="userID">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="279" parent="236" name="itemID">
+    <column id="281" parent="236" name="itemID">
       <Position>2</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="280" parent="236" name="FK_ui_item">
+    <index id="282" parent="236" name="FK_ui_item">
       <ColNames>itemID</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="281" parent="236" name="PRIMARY">
+    <key id="283" parent="236" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>userID
 itemID</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="282" parent="236" name="FK_ui_user">
+    <foreign-key id="284" parent="236" name="FK_ui_user">
       <ColNames>userID</ColNames>
       <RefSchemaName>testDB</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>userID</RefColNames>
     </foreign-key>
-    <foreign-key id="283" parent="236" name="FK_ui_item">
+    <foreign-key id="285" parent="236" name="FK_ui_item">
       <ColNames>itemID</ColNames>
       <RefSchemaName>testDB</RefSchemaName>
       <RefTableName>item</RefTableName>

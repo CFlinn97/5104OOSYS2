@@ -1,6 +1,4 @@
-package CORE;
-
-import java.util.List;
+package core;
 
 public abstract class User {
     private int userID;
