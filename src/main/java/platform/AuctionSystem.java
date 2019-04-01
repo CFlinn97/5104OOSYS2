@@ -3,17 +3,18 @@ package platform;
 import core.Auction;
 import core.Item;
 
-import javax.swing.plaf.synth.SynthLookAndFeel;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+//TODO Browse Auction
+//TODO View Auction
+//TODO Timer thing for updating database
 
 public class AuctionSystem {
     private final Scanner scanner = new Scanner(System.in);
     private final DatabaseAccess databaseAccess;
-    List<Auction> auctionList = null; //Used to store last updated auction information
     private Integer userID = null;
 
     public AuctionSystem() {
@@ -305,6 +306,10 @@ public class AuctionSystem {
     }
 
     public void BrowseAuction() {
+
+    }
+
+    public void WinNotification(List<Auction> wins) {
 
     }
 

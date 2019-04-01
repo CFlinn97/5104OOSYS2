@@ -913,294 +913,222 @@
       <DefaultForCharset>0</DefaultForCharset>
     </collation>
     <table id="229" parent="6" name="auction"/>
-    <table id="230" parent="6" name="auction_item"/>
-    <table id="231" parent="6" name="bid"/>
-    <table id="232" parent="6" name="bid_auction"/>
-    <table id="233" parent="6" name="item"/>
-    <table id="234" parent="6" name="user"/>
-    <table id="235" parent="6" name="user_bid"/>
-    <table id="236" parent="6" name="user_item"/>
-    <column id="237" parent="229" name="auctionID">
+    <table id="230" parent="6" name="bid"/>
+    <table id="231" parent="6" name="item"/>
+    <table id="232" parent="6" name="user"/>
+    <column id="233" parent="229" name="auctionID">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="238" parent="229" name="userID">
+    <column id="234" parent="229" name="userID">
       <Position>2</Position>
       <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="239" parent="229" name="startPrice">
+    <column id="235" parent="229" name="itemID">
       <Position>3</Position>
-      <DataType>decimal(10,2 digit)|0s</DataType>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="240" parent="229" name="reservePrice">
+    <column id="236" parent="229" name="startPrice">
       <Position>4</Position>
       <DataType>decimal(10,2 digit)|0s</DataType>
+      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="241" parent="229" name="closeDate">
+    <column id="237" parent="229" name="reservePrice">
       <Position>5</Position>
+      <DataType>decimal(10,2 digit)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="238" parent="229" name="closeDate">
+      <Position>6</Position>
       <DataType>datetime|0s</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="242" parent="229" name="status">
-      <Position>6</Position>
-      <DataType>enum(&apos;ACTIVE&apos;, &apos;SOLD&apos;, &apos;FAILED&apos;, &apos;CLOSED&apos;)|0e</DataType>
+    <column id="239" parent="229" name="status">
+      <Position>7</Position>
+      <DataType>enum(&apos;ACTIVE&apos;, &apos;SOLD&apos;, &apos;FAILED&apos;, &apos;CLOSED&apos;, &apos;BLOCKED&apos;)|0e</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>&apos;ACTIVE&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="243" parent="229" name="FK_auction_user">
+    <column id="240" parent="229" name="winnerNotified">
+      <Position>8</Position>
+      <DataType>tinyint(1)|0s</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>0</DefaultExpression>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="241" parent="229" name="FK_auction_user">
       <ColNames>userID</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="244" parent="229" name="PRIMARY">
+    <index id="242" parent="229" name="FK_auction_item">
+      <ColNames>itemID</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="243" parent="229" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>auctionID</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="245" parent="229" name="FK_auction_user">
+    <foreign-key id="244" parent="229" name="FK_auction_user">
       <ColNames>userID</ColNames>
       <RefSchemaName>testDB</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>userID</RefColNames>
     </foreign-key>
-    <column id="246" parent="230" name="auctionID">
-      <Position>1</Position>
-      <DataType>int(11)|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="247" parent="230" name="itemID">
-      <Position>2</Position>
-      <DataType>int(11)|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <index id="248" parent="230" name="FK__item">
-      <ColNames>itemID</ColNames>
-      <Type>btree</Type>
-    </index>
-    <key id="249" parent="230" name="PRIMARY">
-      <NameSurrogate>1</NameSurrogate>
-      <ColNames>auctionID
-itemID</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <foreign-key id="250" parent="230" name="FK__auction">
-      <ColNames>auctionID</ColNames>
-      <RefSchemaName>testDB</RefSchemaName>
-      <RefTableName>auction</RefTableName>
-      <RefColNames>auctionID</RefColNames>
-    </foreign-key>
-    <foreign-key id="251" parent="230" name="FK__item">
+    <foreign-key id="245" parent="229" name="FK_auction_item">
       <ColNames>itemID</ColNames>
       <RefSchemaName>testDB</RefSchemaName>
       <RefTableName>item</RefTableName>
       <RefColNames>itemID</RefColNames>
     </foreign-key>
-    <column id="252" parent="231" name="bidID">
+    <column id="246" parent="230" name="bidID">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="253" parent="231" name="bidAmount">
+    <column id="247" parent="230" name="userID">
       <Position>2</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="248" parent="230" name="auctionID">
+      <Position>3</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="249" parent="230" name="bidAmount">
+      <Position>4</Position>
       <DataType>decimal(10,2 digit)|0s</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>0.00</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="254" parent="231" name="bidDT">
-      <Position>3</Position>
+    <column id="250" parent="230" name="bidDT">
+      <Position>5</Position>
       <DataType>datetime|0s</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="255" parent="231" name="PRIMARY">
-      <NameSurrogate>1</NameSurrogate>
-      <ColNames>bidID</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <column id="256" parent="232" name="auctionID">
-      <Position>1</Position>
-      <DataType>int(11)|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="257" parent="232" name="bidID">
-      <Position>2</Position>
-      <DataType>int(11)|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <index id="258" parent="232" name="FK_BA_bid">
-      <ColNames>bidID</ColNames>
+    <index id="251" parent="230" name="FK_bid_user">
+      <ColNames>userID</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="259" parent="232" name="PRIMARY">
+    <index id="252" parent="230" name="FK_bid_auction">
+      <ColNames>auctionID</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="253" parent="230" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
-      <ColNames>auctionID
-bidID</ColNames>
+      <ColNames>bidID</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="260" parent="232" name="FK_BA_auction">
+    <foreign-key id="254" parent="230" name="FK_bid_user">
+      <ColNames>userID</ColNames>
+      <RefSchemaName>testDB</RefSchemaName>
+      <RefTableName>user</RefTableName>
+      <RefColNames>userID</RefColNames>
+    </foreign-key>
+    <foreign-key id="255" parent="230" name="FK_bid_auction">
       <ColNames>auctionID</ColNames>
       <RefSchemaName>testDB</RefSchemaName>
       <RefTableName>auction</RefTableName>
       <RefColNames>auctionID</RefColNames>
     </foreign-key>
-    <foreign-key id="261" parent="232" name="FK_BA_bid">
-      <ColNames>bidID</ColNames>
-      <RefSchemaName>testDB</RefSchemaName>
-      <RefTableName>bid</RefTableName>
-      <RefColNames>bidID</RefColNames>
-    </foreign-key>
-    <column id="262" parent="233" name="itemID">
+    <column id="256" parent="231" name="itemID">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="263" parent="233" name="itemDesc">
+    <column id="257" parent="231" name="userID">
       <Position>2</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="258" parent="231" name="itemDesc">
+      <Position>3</Position>
       <DataType>text|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="264" parent="233" name="itemCond">
-      <Position>3</Position>
+    <column id="259" parent="231" name="itemCond">
+      <Position>4</Position>
       <DataType>enum(&apos;NEW&apos;, &apos;GOOD&apos;, &apos;COSMETIC&apos;, &apos;HEAVY&apos;)|0e</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>&apos;HEAVY&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="265" parent="233" name="itemName">
-      <Position>4</Position>
+    <column id="260" parent="231" name="itemName">
+      <Position>5</Position>
       <DataType>varchar(50)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="266" parent="233" name="userID">
-      <Position>5</Position>
-      <DataType>int(11)|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <key id="267" parent="233" name="PRIMARY">
+    <index id="261" parent="231" name="FK_item__user">
+      <ColNames>userID</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="262" parent="231" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>itemID</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="268" parent="234" name="userID">
+    <foreign-key id="263" parent="231" name="FK_item__user">
+      <ColNames>userID</ColNames>
+      <RefSchemaName>testDB</RefSchemaName>
+      <RefTableName>user</RefTableName>
+      <RefColNames>userID</RefColNames>
+    </foreign-key>
+    <column id="264" parent="232" name="userID">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="269" parent="234" name="userName">
+    <column id="265" parent="232" name="userName">
       <Position>2</Position>
       <DataType>varchar(50)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="270" parent="234" name="password">
+    <column id="266" parent="232" name="password">
       <Position>3</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="271" parent="234" name="userName">
+    <index id="267" parent="232" name="userName">
       <ColNames>userName</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <key id="272" parent="234" name="PRIMARY">
+    <key id="268" parent="232" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>userID</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="273" parent="234" name="userName">
+    <key id="269" parent="232" name="userName">
       <ColNames>userName</ColNames>
       <UnderlyingIndexName>userName</UnderlyingIndexName>
     </key>
-    <column id="274" parent="235" name="userID">
-      <Position>1</Position>
-      <DataType>int(11)|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="275" parent="235" name="bidID">
-      <Position>2</Position>
-      <DataType>int(11)|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <index id="276" parent="235" name="FK_UB_bid">
-      <ColNames>bidID</ColNames>
-      <Type>btree</Type>
-    </index>
-    <key id="277" parent="235" name="PRIMARY">
-      <NameSurrogate>1</NameSurrogate>
-      <ColNames>userID
-bidID</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <foreign-key id="278" parent="235" name="FK_UB_user">
-      <ColNames>userID</ColNames>
-      <RefSchemaName>testDB</RefSchemaName>
-      <RefTableName>user</RefTableName>
-      <RefColNames>userID</RefColNames>
-    </foreign-key>
-    <foreign-key id="279" parent="235" name="FK_UB_bid">
-      <ColNames>bidID</ColNames>
-      <RefSchemaName>testDB</RefSchemaName>
-      <RefTableName>bid</RefTableName>
-      <RefColNames>bidID</RefColNames>
-    </foreign-key>
-    <column id="280" parent="236" name="userID">
-      <Position>1</Position>
-      <DataType>int(11)|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="281" parent="236" name="itemID">
-      <Position>2</Position>
-      <DataType>int(11)|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <index id="282" parent="236" name="FK_ui_item">
-      <ColNames>itemID</ColNames>
-      <Type>btree</Type>
-    </index>
-    <key id="283" parent="236" name="PRIMARY">
-      <NameSurrogate>1</NameSurrogate>
-      <ColNames>userID
-itemID</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <foreign-key id="284" parent="236" name="FK_ui_user">
-      <ColNames>userID</ColNames>
-      <RefSchemaName>testDB</RefSchemaName>
-      <RefTableName>user</RefTableName>
-      <RefColNames>userID</RefColNames>
-    </foreign-key>
-    <foreign-key id="285" parent="236" name="FK_ui_item">
-      <ColNames>itemID</ColNames>
-      <RefSchemaName>testDB</RefSchemaName>
-      <RefTableName>item</RefTableName>
-      <RefColNames>itemID</RefColNames>
-    </foreign-key>
   </database-model>
 </dataSource>

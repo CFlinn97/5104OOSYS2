@@ -1,6 +1,7 @@
 package core;
 
-import java.time.LocalDateTime;
+
+import java.util.Date;
 
 public class Bid {
     public int getBidID() {
@@ -15,17 +16,17 @@ public class Bid {
         return bidUserID;
     }
 
-    public LocalDateTime getBidDT() {
+    public Date getBidDT() {
         return bidDT;
     }
 
     private int bidID;
     private double amount;
     private int bidUserID;
-    private LocalDateTime bidDT;
+    private Date bidDT;
 
 
-    public Bid(int bidID, double amount, int bidUserID, LocalDateTime bidDT) {
+    public Bid(int bidID, double amount, int bidUserID, Date bidDT) {
         this.bidID = bidID;
         this.amount = amount;
         this.bidUserID = bidUserID;

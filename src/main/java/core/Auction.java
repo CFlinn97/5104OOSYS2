@@ -10,21 +10,23 @@ public class Auction {
     CLOSED
 }
 
-    public Auction(int auctionID, AuctionState auctionState, List<Bid> auctionBids, boolean blocked) {
+    public Auction(int auctionID, int userID, AuctionState auctionState, List<Bid> auctionBids) {
         this.auctionID = auctionID;
+        this.userID = userID;
         this.auctionState = auctionState;
         this.auctionBids = auctionBids;
-        this.blocked = blocked;
     }
 
     private int auctionID;
+    private int userID;
     private AuctionState auctionState;
     private List<Bid> auctionBids;
-    private boolean blocked;
 
     public int getAuctionID() {
         return auctionID;
     }
+
+    public int getUserID() { return userID; }
 
     public AuctionState getAuctionState() {
         return auctionState;
@@ -32,10 +34,6 @@ public class Auction {
 
     public List<Bid> getAuctionBids() {
         return auctionBids;
-    }
-
-    public boolean isBlocked() {
-        return blocked;
     }
 
     public void PlaceBid() {
