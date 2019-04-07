@@ -2,6 +2,10 @@ package core;
 
 public class Item {
 
+    private ItemDamage itemDamage;
+    private int itemID;
+    private String description;
+    private String name;
     public Item(int itemID, String name, ItemDamage itemDamage, String description) {
         this.itemDamage = itemDamage;
         this.itemID = itemID;
@@ -9,22 +13,13 @@ public class Item {
         this.name = name;
     }
 
-    public enum ItemDamage {
-        NEW,
-        GOOD,
-        COSMETIC,
-        HEAVY
-    }
-    private ItemDamage itemDamage;
-    private int itemID;
-    private String description;
-    private String name;
-
     public ItemDamage getItemDamage() {
         return itemDamage;
     }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
     public int getItemID() {
         return itemID;
@@ -32,6 +27,13 @@ public class Item {
 
     public String getDescription() {
         return description;
+    }
+
+    public enum ItemDamage {
+        NEW,
+        GOOD,
+        COSMETIC,
+        HEAVY
     }
 
 }

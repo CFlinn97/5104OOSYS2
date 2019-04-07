@@ -4,14 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Auction {
-    public enum AuctionState {
-    ACTIVE,
-    FAILED,
-    SOLD,
-    CLOSED
-}
     private static double minBidDifference = 2.00;
-
     private int auctionID;
     private int userID;
     private AuctionState auctionState;
@@ -20,7 +13,6 @@ public class Auction {
     private double startPrice;
     private double reservePrice;
     private Date closeDate;
-
     public Auction(int auctionID, int userID, AuctionState auctionState, Item auctionItem, List<Bid> auctionBids,
                    double startPrice, double reservePrice, Date closeDate) {
         this.auctionID = auctionID;
@@ -32,6 +24,7 @@ public class Auction {
         this.reservePrice = reservePrice;
         this.closeDate = closeDate;
     }
+
     //TODO Close Auction
     //TODO Block Auction
     public double getStartPrice() {
@@ -60,8 +53,8 @@ public class Auction {
 
     public Bid getHighestBid() {
         Bid high = (auctionBids.size() == 0) ? null : auctionBids.get(0);
-        for(Bid b : auctionBids) {
-            if(b.getAmount() < high.getAmount()) {
+        for (Bid b : auctionBids) {
+            if (b.getAmount() < high.getAmount()) {
                 high = b;
             }
         }
@@ -76,6 +69,13 @@ public class Auction {
             return bid.getAmount() + minBidDifference;
         }
 
+    }
+
+    public enum AuctionState {
+        ACTIVE,
+        FAILED,
+        SOLD,
+        CLOSED
     }
 
 }

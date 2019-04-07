@@ -2,6 +2,7 @@ package platform;
 
 import core.Auction;
 import core.Item;
+import core.User;
 
 import java.math.RoundingMode;
 import java.security.NoSuchAlgorithmException;
@@ -12,14 +13,14 @@ import java.util.List;
 import java.util.Scanner;
 
 
-
-public class AuctionSystem {
+class AuctionSystem {
     private final Scanner scanner = new Scanner(System.in);
     private final DatabaseAccess databaseAccess;
-    private Integer userID = null;
-    Thread t;
-    boolean run = true;
-    public AuctionSystem() {
+    private User user = null;
+    private Thread t;
+    private boolean run = true;
+
+    AuctionSystem() {
         databaseAccess = new DatabaseAccess();
         Runnable updater = new Runnable() {
             @Override
@@ -41,7 +42,7 @@ public class AuctionSystem {
         t.start();
     }
 
-    public void begin() {
+    void begin() {
         Integer input = null;
         try {
             int[] counts = databaseAccess.GetSystemStats();
@@ -54,7 +55,7 @@ public class AuctionSystem {
         }
 
         do {
-            if (userID == null) {
+            if (user == null) {
                 System.out.println("Please select an option:");
                 System.out.println("[1] Create Account");
                 System.out.println("[2] Login");
@@ -90,10 +91,10 @@ public class AuctionSystem {
                 }
             } else {
                 try {
-                    DatabaseAccess.UserStat userStat = databaseAccess.GetUserStats(userID);
+                    DatabaseAccess.UserStat userStat = databaseAccess.GetUserStats(user.getUserID());
                     System.out.printf("Logged in as %s. You have %d Auctions active and %d Bids open\n", userStat.username,
                             userStat.auctions, userStat.bid);
-                    WinNotification(databaseAccess.checkWonAuctions(userID));
+                    WinNotification(databaseAccess.checkWonAuctions(user.getUserID()));
 
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.toString());
@@ -132,10 +133,12 @@ public class AuctionSystem {
             }
         } while (input != 0);
     }
+
     //TODO Show logged in users all own auctions
     //TODO Show logged in users all auctions they have bid on
     //TODO Allow exit to menu
-    public void CreateAccount() {
+    //TODO Clean out all the useless stuff
+    private void CreateAccount() {
         int complete = 0;
         do {
             System.out.println("Please enter your chosen username");
@@ -164,7 +167,7 @@ public class AuctionSystem {
         } while (complete != 1);
     }
 
-    public void Login() {
+    private void Login() {
         Login:
         do {
             System.out.println("Please enter username");
@@ -172,16 +175,16 @@ public class AuctionSystem {
             System.out.println("Please enter your password");
             String password = scanner.nextLine();
             try {
-                userID = databaseAccess.LoginUser(username, password);
+                user = databaseAccess.LoginUser(username, password);
             } catch (NoSuchAlgorithmException | SQLException e) {
                 System.out.println("Error: " + e.toString());
                 continue;
             }
-            if (userID == null) {
+            if (user == null) {
                 System.out.println("Username or password incorrect. Please choose and option:");
                 System.out.println("[1] Retry");
                 System.out.println("[0] Return");
-                Integer input = scanner.nextInt();
+                int input = scanner.nextInt();
                 if (scanner.hasNextLine()) {
                     scanner.nextLine();
                 }
@@ -196,15 +199,15 @@ public class AuctionSystem {
             } else {
                 System.out.println("Login success");
             }
-        } while (userID == null);
+        } while (user == null);
 
     }
 
-    public void CreateAuction() {
+    private void CreateAuction() {
         List<Item> items;
         Item selectedItem = null;
         try {
-            items = databaseAccess.getUserItems(userID);
+            items = databaseAccess.getUserItems(user.getUserID());
         } catch (SQLException e) {
             System.out.println("Error: " + e.toString());
             return;
@@ -233,9 +236,9 @@ public class AuctionSystem {
                 }
             } while (selectComplete != 1);
             System.out.println("Please enter your chosen starting price");
-            Double startPrice = Double.parseDouble(scanner.nextLine());
+            double startPrice = Double.parseDouble(scanner.nextLine());
             System.out.println("Please enter your chosen reserve price");
-            Double reservePrice = Double.parseDouble(scanner.nextLine());
+            double reservePrice = Double.parseDouble(scanner.nextLine());
             int length = 0;
             int timeComp = 0;
             do {
@@ -264,7 +267,7 @@ public class AuctionSystem {
             if (input == 'y') {
                 allComp = 1;
                 try {
-                    databaseAccess.createAuction(userID, startPrice, reservePrice, length, selectedItem.getItemID());
+                    databaseAccess.createAuction(user.getUserID(), startPrice, reservePrice, length, selectedItem.getItemID());
                     System.out.println("Auction created!");
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.toString());
@@ -278,7 +281,7 @@ public class AuctionSystem {
 
     }
 
-    public void CreateItem() {
+    private void CreateItem() {
         int complete = 0;
         do {
             System.out.println("Please enter item name");
@@ -322,7 +325,7 @@ public class AuctionSystem {
             if (input == 'y') {
                 complete = 1;
                 try {
-                    databaseAccess.createItem(name, desc, dmg, userID);
+                    databaseAccess.createItem(name, desc, dmg, user.getUserID());
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.toString());
                     return;
@@ -332,7 +335,7 @@ public class AuctionSystem {
         } while (complete != 1);
     }
 
-    public void BrowseAuction() {
+    private void BrowseAuction() {
         List<Auction> auctions;
         try {
             auctions = databaseAccess.getActiveAuctions();
@@ -364,7 +367,7 @@ public class AuctionSystem {
 
     }
 
-    public void ViewAuction(Auction auctionIN) {
+    private void ViewAuction(Auction auctionIN) {
         Auction auction;
         do {
             try {
@@ -400,8 +403,8 @@ public class AuctionSystem {
 
     }
 
-    public void PlaceBid(Auction auctionIN) {
-        if(userID == null) {
+    private void PlaceBid(Auction auctionIN) {
+        if (user == null) {
             System.out.println("You must be logged in to place a bid");
             return;
         }
@@ -428,7 +431,7 @@ public class AuctionSystem {
                 continue;
             }
             try {
-                databaseAccess.placeBid(auction.getAuctionID(), userID, input);
+                databaseAccess.placeBid(auction.getAuctionID(), user.getUserID(), input);
             } catch (SQLException e) {
                 System.out.println("Bid could not be placed, please try again later");
                 System.out.println(e.toString());
@@ -436,10 +439,10 @@ public class AuctionSystem {
             }
             System.out.println("Bid successfully placed");
             placed = true;
-        }while(!placed);
+        } while (!placed);
     }
 
-    public void WinNotification(List<Auction> wins) {
+    private void WinNotification(List<Auction> wins) {
         if (wins.size() > 0) {
             System.out.println("\n~~~ You have won! ~~~");
             for (Auction a : wins) {
