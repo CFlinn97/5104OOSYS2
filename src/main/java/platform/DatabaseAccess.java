@@ -7,10 +7,8 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -18,7 +16,6 @@ import java.util.List;
 
 
 public final class DatabaseAccess {
-    private Connection connection;
     private MysqlDataSource dataSource = new MysqlDataSource();
 
 
@@ -193,6 +190,13 @@ public final class DatabaseAccess {
         return fillAuctionInfo(list, con, ps);
     }
 
+    public void markWinnerNotified(Auction auction) throws SQLException {
+        Connection con = dataSource.getConnection();
+        PreparedStatement ps = con.prepareStatement("UPDATE auction SET winnerNotified = 1 WHERE auctionID = ?");
+        ps.setInt(1, auction.getAuctionID());
+        ps.executeUpdate();
+    }
+
     private List<Auction> fillAuctionInfo(List<Auction> list, Connection con, PreparedStatement ps) throws SQLException {
         ResultSet rs = ps.executeQuery();
         while(rs.next()) {
@@ -211,7 +215,25 @@ public final class DatabaseAccess {
                 bids.add(new Bid(b_id, amount, b_user, time));
             }
             CloseQueryItems(bps, brs);
-            list.add(new Auction(id, user, state, bids));
+            Item item;
+            int itemID = rs.getInt("itemID");
+            PreparedStatement ips = con.prepareStatement("SELECT * FROM item WHERE itemID = ?");
+            ips.setInt(1,itemID);
+            ResultSet irs = ips.executeQuery();
+            if(irs.next()) {
+                int i_id = irs.getInt("itemID");
+                String desc = irs.getString("itemDesc");
+                String name = irs.getString("itemName");
+                Item.ItemDamage dmg = Item.ItemDamage.valueOf(irs.getString("itemCond"));
+                item = new Item(i_id, name, dmg, desc);
+            } else {
+                throw new SQLException("Item not found");
+            }
+            double startP = rs.getDouble("startPrice");
+            double resP = rs.getDouble("reservePrice");
+            Timestamp ts = rs.getTimestamp("closeDate");
+            Date close = ts;
+            list.add(new Auction(id, user, state, item, bids, startP, resP, close));
         }
         CloseQueryItems(con, ps, rs);
         return list;
@@ -226,7 +248,6 @@ public final class DatabaseAccess {
         ps.setString(4, dmg.toString());
         ps.executeUpdate();
         CloseQueryItems(con, ps);
-       ;
     }
 
     public void createAuction(int userID, double startPrice, double reservePrice, int length, int itemID) throws SQLException {
@@ -240,5 +261,57 @@ public final class DatabaseAccess {
         ps.setString(5, "ACTIVE");
         ps.executeUpdate();
         CloseQueryItems(con, ps);
+    }
+
+    public void placeBid(int auctionID,int userID, double bid) throws SQLException{
+        Connection con = dataSource.getConnection();
+        PreparedStatement ps = con.prepareStatement("INSERT INTO bid(userID, auctionID, bidAmount) VALUES(?,?,?)");
+        ps.setInt(1, userID);
+        ps.setInt(2, auctionID);
+        ps.setDouble(3, bid);
+        ps.executeUpdate();
+        CloseQueryItems(con, ps);
+    }
+
+    public void updateDatabaseInfo() throws SQLException{
+        List<Auction> auctions = getActiveAuctions();
+        Connection con = dataSource.getConnection();
+        Date date = Date.from(Instant.now());
+
+        for(Auction a : auctions) {
+            if(date.toInstant().isAfter(a.getCloseDate().toInstant())) {
+                System.out.println("DB RECORD UPDATE");
+                double highbid = 0;
+                for(Bid b : a.getAuctionBids()) {
+                    if (b.getAmount() > highbid) {
+                        highbid = b.getAmount();
+                    }
+                }
+                Auction.AuctionState state;
+                int notify;//0 = tell user, 1 = dont
+                if(highbid > a.getReservePrice()) {
+                    state = Auction.AuctionState.SOLD;
+                    notify = 0;
+                } else {
+                    state = Auction.AuctionState.FAILED;
+                    notify = 1;
+                }
+                PreparedStatement ps = con.prepareStatement("UPDATE auction SET status = ?, winnerNotified = ? WHERE auctionID = ?");
+                ps.setString(1,state.toString());
+                ps.setInt(2, notify);
+                ps.setInt(3, a.getAuctionID());
+                ps.executeUpdate();
+                CloseQueryItems(ps);
+            }
+        }
+        con.close();
+    }
+
+    public Auction getAuction(int auctionID) throws SQLException{
+        List<Auction> list = new ArrayList<>();
+        Connection con = dataSource.getConnection();
+        PreparedStatement ps = con.prepareStatement("SELECT * FROM auction WHERE auctionID = ?");
+        ps.setInt(1,auctionID);
+        return fillAuctionInfo(list, con, ps).get(0);
     }
 }
